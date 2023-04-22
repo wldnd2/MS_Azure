@@ -13,7 +13,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
     cnt = 0
     cur = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음

@@ -32,7 +32,7 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         result = request.form # start_page, end_page, num_of_questions 변수 저장
-        file = request.files['file']
+        file = request.files['myfile']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
