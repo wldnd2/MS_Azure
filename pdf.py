@@ -11,7 +11,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
 #    txt = open("./downloads/" + filename + "_questions.txt", 'w', encoding='utf-8')
     cur = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
@@ -27,8 +27,9 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
 
     for page in pages: # 페이지별 문제 추출
         cur += 1 # 현재 페이지 수
+        #print('end============',type(end_page))
         if cur < int(start_page) or cur > int(end_page): # start_page ~ end_page 까지만 작동
-            continue;
+            continue
         
         query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장
         print(f"-- {cur} 페이지 문제 추출 중 --")

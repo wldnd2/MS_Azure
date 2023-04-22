@@ -46,16 +46,17 @@ def upload_file():
 def loading():
     filename = session.get('filename')
     result = session.get('result')
-    print(filename, result)
+    #print(filename, result)
     if request.method == 'POST':
         res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
         # return redirect(url_for('questions', result=res))
-        return questions(res)
+        result["filename"] = filename
+        return questions(result)
     return render_template('loading.html', filename=filename, result=result)
     
 @app.route('/questions')
 def questions(result):
-    print(result)
+    print("==============",result)
     pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
     return render_template('questions.html')
 
