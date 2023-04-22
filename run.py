@@ -38,7 +38,7 @@ def allowed_file(filename):
 def pdf_processing(filename:str):    
     """ PDF 추출 Setting """
     reader = PdfReader(filename)
-    pages = reader.pages 
+    pages = reader.pages
     txt = open(filename + "_questions.txt", 'w+', encoding='utf-8')
     cur = 0 # 현재 페이지
     exception_pages = [] # 제외할 페이지 입력받기
