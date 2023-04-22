@@ -11,7 +11,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
     txt = open("./result/" + filename + "_questions.txt", 'w', encoding='utf-8')
     cur = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
@@ -47,7 +47,17 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
 #        add_code = "json_data['questions'].append(" + answer + ")"
 #        exec(add_code)
         print(f"answer: {answer}")
-        txt.write(answer + "\n")
+        # JSON 문자열을 파싱하여 딕셔너리로 저장
+        data = json.loads(answer)
+
+        # 문제 형식으로 출력
+        for key, value in data.items():
+            txt.write(f'{value["question"]}\n')
+            for i in range(1, 5):
+                txt.write(f'{i}. {value[str(i)]}\n')
+            txt.write(f'정답: {value["answer"]}\n')
+            txt.write(f'해설: {value["explanation"]}\n\n')
+        # txt.write(answer + "\n")
         # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
         messages.pop()
         
