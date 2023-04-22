@@ -56,7 +56,6 @@ def loading():
     
 @app.route('/questions')
 def questions(result):
-    print("==============",result)
     question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
     return render_template('questions.html', result=question)
 

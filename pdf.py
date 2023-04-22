@@ -13,7 +13,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
     cnt = 0
     cur = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
@@ -45,8 +45,16 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
         """ !!Json 형식으로 GPT 답변이 온다고 가정하고 코드 작성!! """
 #        add_code = "json_data['questions'].append(" + answer + ")"
 #        exec(add_code)
-        print(answer)
+        print('answer: ',answer)
+        print('cnt: ',cnt)
+
         questions[cnt] = answer
+        questions[cnt] = questions[cnt].replace("{","")
+        questions[cnt] = questions[cnt].replace("}","")
+        questions[cnt] = questions[cnt].replace("\"","")
+        questions[cnt] = questions[cnt].replace(",","\n")
+       
+        cnt = cnt+1
         
         # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
         messages.pop()
