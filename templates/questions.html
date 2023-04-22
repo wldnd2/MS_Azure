@@ -9,5 +9,13 @@
 </head>
 <body>
     <h1>문제 출제 페이지</h1>
+    <table>
+        {% for key, value in result.items() %}
+           <tr>
+              <th> {{ key }} </th>
+              <td> {{ value }} </td>
+           </tr>
+        {% endfor %}
+   </table>
 </body>
 </html>
