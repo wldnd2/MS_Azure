@@ -32,7 +32,7 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         result = request.form # start_page, end_page, num_of_questions 변수 저장
-        file = request.files['myfile']
+        file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -57,8 +57,8 @@ def loading():
 @app.route('/questions')
 def questions(result):
     print("==============",result)
-    question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
-    return render_template('questions.html', result=question)
+    questions =pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
+    return render_template('questions.html')
 
 
 if __name__ == '__main__':
