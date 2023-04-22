@@ -16,8 +16,14 @@
               <td> {{ value }} </td>
            </tr>
         {% endfor %}
-     </table>
-     <script type="text/javascript" src="check.js"></script>
-     <input id="target_btn" type="button" disabled="disabled" value="문제로 이동하기" disabled value="문제 준비중" onclick="window.location.href='/questions'"/>
+   </table>
+   <form action="http://127.0.0.1:5000/loading" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="filename" value="{{filename}}">
+      <input type = "hidden" name = "start_page" value="{{start_page}}"/>
+      <input type = "hidden" name = "end_page" value="{{end_page}}"/>
+      <input type = "hidden" name = "num_of_questions" value="{{num_of_questions}}"/>
+      <input type="submit" value="문제 제작하기">
+   </form>
+
 </body>
 </html>
