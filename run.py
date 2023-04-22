@@ -1,9 +1,10 @@
+#-*- coding: utf-8 -*-
+
 """
     pip install flask
     pip install openai -> 오류나면 cmd 관리자권한으로 실행해서 입력
     pip install PyPDF2
 """
-
 import os
 from werkzeug.utils import secure_filename
 from flask import Blueprint, send_file, request, redirect, url_for, render_template, Flask
@@ -39,7 +40,13 @@ def pdf_processing(filename:str):
     """ PDF 추출 Setting """
     reader = PdfReader(filename)
     pages = reader.pages 
+
+    #여기 수정해야함.
+    txt_filename = filename.split('/')
+    filename = 'result/'+txt_filename[1]
     txt = open(filename + "_questions.txt", 'w+', encoding='utf-8')
+
+
     cur = 0 # 현재 페이지
     exception_pages = [] # 제외할 페이지 입력받기
 
