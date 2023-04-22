@@ -58,7 +58,7 @@ def loading():
 def questions(result):
     print("==============",result)
     pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
-    return render_template('questions.html')
+    return render_template('questions.html', result=result)
 
 
 if __name__ == '__main__':
