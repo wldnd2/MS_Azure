@@ -11,11 +11,11 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
 #    txt = open("./downloads/" + filename + "_questions.txt", 'w', encoding='utf-8')
     cur = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
-            {"role": "system", "content": "사용자가 전송하는 내용 중 중요한 내용을 사용하여 4지선다형 문제 1개를 내고,\
+            {"role": "system", "content": "사용자가 전송하는 내용으로 구성된 단어를 최대한 사용하여 모두 객관식인 문제를 내고,\
                 각각의 문제의 정답과 해설을 알려주세요.\n\
                 답변 형식: json 형식"}
     ]

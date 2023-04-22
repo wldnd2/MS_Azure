@@ -4,17 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Upload PDF</h1>
-    <p>파일 형식은 pdf로, pdf는 50 페이지 이하로 제한됩니다.</p>
-    <p>스캔된 형식의 PDF에서는 작동하지 않습니다.</p>
-    <form action="http://127.0.0.1:5000" method="post" enctype="multipart/form-data">
-        <p><input type="file" name="file"></p>
-        <p>첫 페이지<input type = "text" name = "start_page" placeholder="문제 출제에 사용할 첫 페이지를 입력해 주세요"/></p>
-        <p>마지막 페이지<input type = "text" name = "end_page" placeholder="문제 출제에 사용할 마지막 페이지를 입력해 주세요"/></p>
-        <p>문제 수<input type = "text" name = "num_of_questions" placeholder="출제할 문제 수를 입력해 주세요"/></p>
-        <p><input type="submit" value="문제 출제하기"></p>
-      </form>
+    <div class="whole_wrap">
+        <div id="caution">
+            <p>  ✦  파일 형식은 pdf로, pdf는 50 페이지 이하로 제한됩니다.</p>
+            <p>스캔된 형식의 PDF에서는 작동하지 않습니다.</p>
+        </div>
+        
+        <form action="http://127.0.0.1:5000" method="post" enctype="multipart/form-data">
+            <div class="contain">
+                <div class="file_up_con">
+                    <div class="upload_btn">
+                        <label for="input-file" id="upload_btn"><p class="text_upload">업로드</p></label>
+                    </div>
+                    <input type="file" id="input-file" style="padding-left: 15px; padding-top: 10px;"/>
+                </div>
+                <div class="comment-wrap">
+                    <div class="page">
+                        <div class="first">첫 페이지</div>
+                        <div class="input_first"><input id="input" type = "text" name = "start_page" placeholder="첫 페이지를 입력해 주세요"/></div>
+                    </div>
+                    <div class="page">
+                            <div class="first">마지막 페이지</div>
+                            <div class="input_first"><input id="input" type = "text" name = "end_page" placeholder="문제 출제에 사용할 마지막 페이지를 입력해 주세요"/></div>
+                    </div>
+                    <div class="page">
+                        <div class="first">문제 수</div>
+                        <div class="input_first"><input id="input" type = "text" name = "num_of_questions" placeholder="출제할 문제 수를 입력해 주세요"/></div>
+                    </div>
+                </div>
+                <div class="input_button_wrap">
+                    <button id="input_button" type="submit" value="문제 출제하기">문제 출제하기</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
