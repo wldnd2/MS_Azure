@@ -10,11 +10,14 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import Blueprint, send_file, request, redirect, url_for, render_template, Flask
+from flask import session
 from PyPDF2 import PdfReader
 import openai, json
 from pdf import pdf_processing
+import secrets
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)
 
 UPLOAD_FOLDER = os.getcwd() + '/uploads'  # 절대 파일 경로
 ALLOWED_EXTENSIONS = set(['pdf'])
@@ -33,14 +36,21 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('loading', filename=filename, result=result))
+            print(f'upload file: {filename}, {result}')
+            session['filename'] = filename
+            session['result'] = result
+            return redirect(url_for('loading'))
     return render_template('fileupload.html') # GET 
 
 @app.route('/loading', methods=['GET', 'POST'])
-def loading(filename, result):
+def loading():
+    filename = session.get('filename')
+    result = session.get('result')
+    print(filename, result)
     if request.method == 'POST':
         res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
-        return redirect(url_for('questions', result=res))
+        # return redirect(url_for('questions', result=res))
+        return questions(res)
     return render_template('loading.html', filename=filename, result=result)
     
 @app.route('/questions')
