@@ -14,13 +14,9 @@ app = Flask(__name__)
 
 UPLOAD_FOLDER = os.getcwd() + '/uploads'  # 절대 파일 경로
 ALLOWED_EXTENSIONS = set(['pdf'])
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024 # 16MB로 업로드 크기 제한, RequestEntityTooLarge : 크기 초과시 이 예외 발생, 처리 필요
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -30,28 +26,25 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # 여기서 pdf_processing() 실행
+            pdf_processing('uploads/'+ filename)
             return render_template('loading.html', filename=filename, result=result) 
     return render_template('fileupload.html') # GET 방식의 요청일 때
 
-@app.route('/questions')
-def questions():
-    return render_template('questions.html')
 
-if __name__ == '__main__':
-    app.run(debug=True) # 배포시 debug=True 삭제
-    # app.run(host='0.0.0.0') 배포 시 사용
-    
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 def pdf_processing(filename:str):    
     """ PDF 추출 Setting """
     reader = PdfReader(filename)
     pages = reader.pages 
-    txt = open("./downloads/" + filename + "_questions.txt", 'w', encoding='utf-8')
+    txt = open(filename + "_questions.txt", 'w+', encoding='utf-8')
     cur = 0 # 현재 페이지
     exception_pages = [] # 제외할 페이지 입력받기
 
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
@@ -80,3 +73,12 @@ def pdf_processing(filename:str):
         
         messages.pop()
     txt.close()
+
+@app.route('/questions')
+def questions():
+    return render_template('questions.html')
+
+if __name__ == '__main__':
+    app.run(debug=True) # 배포시 debug=True 삭제
+    # app.run(host='0.0.0.0') 배포 시 사용
+    
