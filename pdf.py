@@ -46,6 +46,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
 #        add_code = "json_data['questions'].append(" + answer + ")"
 #        exec(add_code)
         print(answer)
+        cnt += 1
         questions[cnt] = answer
         
         # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
