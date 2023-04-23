@@ -1,5 +1,4 @@
-#-*- coding: utf-8 -*-
-
+# -*- coding: utf-8 -*-
 """
     pip install flask
     pip install openai -> 오류나면 cmd 관리자권한으로 실행해서 입력
@@ -8,13 +7,13 @@
     실행: python run.py
 """
 import os
-from werkzeug.utils import secure_filename
-from flask import Blueprint, send_file, request, redirect, url_for, render_template, Flask
-from flask import session
-from PyPDF2 import PdfReader
-import openai, json
-from pdf import pdf_processing
+import json
+import openai
 import secrets
+from PyPDF2 import PdfReader
+from pdf import pdf_processing
+from werkzeug.utils import secure_filename
+from flask import Blueprint, send_file, request, redirect, url_for, render_template, Flask, session
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -36,7 +35,6 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(f'upload file: {filename}, {result}')
             session['filename'] = filename
             session['result'] = result
             return redirect(url_for('loading'))
@@ -46,10 +44,8 @@ def upload_file():
 def loading():
     filename = session.get('filename')
     result = session.get('result')
-    #print(filename, result)
     if request.method == 'POST':
-        res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
-        # return redirect(url_for('questions', result=res))
+        # res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
         result["filename"] = filename
         return questions(result)
     return render_template('loading.html', filename=filename, result=result)
@@ -58,7 +54,7 @@ def loading():
 def questions(result):
     question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
     Qna_result = {}
-    print("************************")
+    print("***********{ Questions List }*************")
     for key, value in question.items():
         Qna_result[key] = json.loads(value)
     print(Qna_result)
