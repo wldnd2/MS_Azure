@@ -40,16 +40,6 @@ def upload_file():
             return redirect(url_for('questions'))
     return render_template('fileupload.html') # GET 
 
-# @app.route('/loading', methods=['GET', 'POST'])
-# def loading():
-#     filename = session.get('filename')
-#     result = session.get('result')
-#     if request.method == 'POST':
-#         # res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
-#         result["filename"] = filename
-#         return questions(result)
-#     return render_template('loading.html', filename=filename, result=result)
-    
 @app.route('/questions')
 def questions():
     
