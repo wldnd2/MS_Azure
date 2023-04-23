@@ -57,10 +57,14 @@ def loading():
 @app.route('/questions')
 def questions(result):
     question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
-    return render_template('questions.html', result=question)
+    Qna_result = {}
+    print("************************")
+    for key, value in question.items():
+        Qna_result[key] = json.loads(value)
+    print(Qna_result)
+    return render_template('questions.html', result=Qna_result)
 
 
 if __name__ == '__main__':
     app.run(debug=True) # 배포시 debug=True 삭제
     # app.run(host='0.0.0.0') 배포 시 사용
-    
