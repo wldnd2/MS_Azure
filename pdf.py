@@ -13,11 +13,11 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page
     questions_number = 1
     cur_page = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
-            {"role": "system", "content": "사용자가 전송하는 내용을 토대로 문제를 한 개만 만들어줘. { 문제 : 질문, 1 : 첫 번째 선택지, 2 : 두 번째 선택지, 3: 세 번째 선택지, 4: 네 번째 선택지, 정답: 정답번호, 해설: 해설 } 이러한 형태로 출력해줘. json 형식으로 답해줘."}
+            {"role": "system", "content": "사용자가 전송하는 내용을 토대로 문제를 정확히 1개만 출제해. { 문제 : 질문, 1 : 첫 번째 선택지, 2 : 두 번째 선택지, 3: 세 번째 선택지, 4: 네 번째 선택지, 정답: 정답번호, 해설: 해설 } 이러한 json형태로 출력해."}
     ]
     
     """ JSON Setting """
@@ -34,15 +34,16 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page
         print(f"-- {cur_page} 페이지 문제 추출 중 --")
         messages.append({"role": "user", "content": query})
         
-        # ChatGPT API 호출하기
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=messages
-        )
-        answer = response['choices'][0]['message']['content']
-        print('answer: ',answer)
-        questions[questions_number] = answer
-        questions_number += 1
+        for i in range(int(num_of_questions_per_page)):
+            # ChatGPT API 호출하기
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=messages
+            )
+            answer = response['choices'][0]['message']['content']
+            print('answer: ',answer)
+            questions[questions_number] = answer
+            questions_number += 1
 
         # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
         messages.pop()

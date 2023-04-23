@@ -54,10 +54,30 @@ def loading():
 def questions(result):
     question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
     Qna_result = {}
-    print("***********{ Questions List }*************")
+    Qna_number = 1
+    # print("***********{ PDF RESULT }***********")
+    # print(question)
+    print("\n***********{ Questions PROCESSING }*************")
     for key, value in question.items():
-        Qna_result[key] = json.loads(value)
-    print(Qna_result)
+        try:
+            if(value[0] == "[" and value[-1] == "]"):
+                print("***********{ List processing }***********")
+                value = json.loads(value)
+                for item in value:
+                    Qna_result[Qna_number] = item
+                    Qna_number += 1
+            else:
+                print("***********{ Json processing }***********")
+                Qna_result[Qna_number] = json.loads(value)
+                Qna_number += 1
+        except:
+            print("***********{ PASS!!!! }*************")
+            continue
+    print("\n***********{ FINAL RESULT }*************")
+    for key, value in Qna_result.items():
+        print(key, value)
+        print()
+    print("*******************************************")
     return render_template('questions.html', result=Qna_result)
 
 
