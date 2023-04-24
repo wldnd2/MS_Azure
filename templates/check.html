@@ -11,41 +11,53 @@
             background-image: url('../static/css/back.png');
             background-color: black;
             background-repeat : no-repeat;
-            background-size : cover;
+            background-size : contain;
             width: 100%;
             margin: 0 0 0 0;
             font-family: Arial, sans-serif;
             font-size: 16px;
-            display: flex;
-            justify-content: center;
         }
-        
+
+        .wrap-body
+        {
+            width: 90%;
+            justify-content: center;
+            margin: 0 0 0 0;
+        }
+
+        .wrap-whole {
+            width: 70%;
+        }
+
         h1 {
             color: #333;
             text-align: center;
         }
 
-        .wrap-whole {
-            width: 80%;
+        div {
             background-color:rgba(255, 255, 255, 0.95);
             border: 1px solid #ccc;
             border-radius: 20px;
             padding: 20px;
             margin: 20px;
-            margin-top: 20%;
             box-shadow: 1px 0px 30px 8px rgba(255,255,255,0.3);
         }
         
+        contain.body
+        {
+            margin-top: 20%;
+            display: flex;
+            justify-content: center;
+        }
+
         h3{
             text-align: center;
-            margin-bottom: 30px;
         }
         
         table {
             margin: 20px auto;
             border-collapse: collapse;
             border: 1px solid #ddd;
-            width: 80%;
         }
         
         th, td {
@@ -55,7 +67,6 @@
         }
         
         th {
-            width: 70px;
             height: 20px;
             text-align: center;
             background-color: #c3dcf1;
@@ -66,49 +77,42 @@
             background: #ef7676;
         }
 
-        .content
-        {
-            width: 90%;
-            display: flex;
-            justify-content: center;
-        }
-
-        .hey {
-            margin-left: 10%;
-        }
     </style>
 </head>
 <body>
-    <div class="wrap-whole">
-        <h1>🔥 정답 확인</h1>
-        <h3>틀린 문제: {{ false_num }}개</h3>
-        <div class="content">
-            <div class="hey">
-                {% for key, value in check_result.items() %}
-                {% if false_answer[key|int - 1]==False %}
-                    <div>
-                        {% for inner_key, inner_value in value.items() %}
-                            {% if inner_key == '문제' %}
-                                <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
-                            {% else %}
-                                <div>{{ inner_key }}. {{ inner_value }}</div>
-                            {% endif %}
+    <contain class="wrap-body">
+        <contain class="body">
+            <div class="wrap-whole">
+                <div>
+                    <h1>🔥 문제 답 확인하기</h1>
+                </div>
+                <div>
+                        {% for key, value in check_result.items() %}
+                        {% if false_answer[key|int - 1]==False %}
+                            <div>
+                                {% for inner_key, inner_value in value.items() %}
+                                    {% if inner_key == '문제' %}
+                                        <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
+                                    {% else %}
+                                        <div>{{ inner_key }}. {{ inner_value }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div>
+                                {% for inner_key, inner_value in value.items() %}
+                                    {% if inner_key == '문제' %}
+                                        <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
+                                    {% else %}
+                                        <div>{{ inner_key }}. {{ inner_value }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         {% endfor %}
-                    </div>
-                {% else %}
-                    <div>
-                        {% for inner_key, inner_value in value.items() %}
-                            {% if inner_key == '문제' %}
-                                <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
-                            {% else %}
-                                <div>{{ inner_key }}. {{ inner_value }}</div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                {% endfor %}
+                </div>
             </div>
-        </div>
-    </div>
+        </contain>
+    </contain>
 </body>
 </html>
