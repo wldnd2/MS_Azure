@@ -1,71 +1,51 @@
-#-*- coding: utf-8 -*-
-
-"""
-    pip install flask
-    pip install openai -> 오류나면 cmd 관리자권한으로 실행해서 입력
-    pip install PyPDF2
-    
-    실행: python run.py
-"""
 import os
 from werkzeug.utils import secure_filename
 from flask import Blueprint, send_file, request, redirect, url_for, render_template, Flask
-from flask import session
 from PyPDF2 import PdfReader
 import openai, json
-from pdf import pdf_processing
-import secrets
 
-app = Flask(__name__)
-app.secret_key = secrets.token_hex(16)
-
-UPLOAD_FOLDER = os.getcwd() + '/uploads'  # 절대 파일 경로
-ALLOWED_EXTENSIONS = set(['pdf'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024 # 16MB로 업로드 크기 제한, RequestEntityTooLarge : 크기 초과시 이 예외 발생, 처리 필요
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-@app.route('/', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        result = request.form # start_page, end_page, num_of_questions 변수 저장
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(f'upload file: {filename}, {result}')
-            session['filename'] = filename
-            session['result'] = result
-            return redirect(url_for('loading'))
-    return render_template('fileupload.html') # GET 
-
-@app.route('/loading', methods=['GET', 'POST'])
-def loading():
-    filename = session.get('filename')
-    result = session.get('result')
-    #print(filename, result)
-    if request.method == 'POST':
-        res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
-        # return redirect(url_for('questions', result=res))
-        result["filename"] = filename
-        return questions(result)
-    return render_template('loading.html', filename=filename, result=result)
+def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page):    
+    """ PDF 추출 Setting """
+    reader = PdfReader("./uploads/" + filename)
+    pages = reader.pages 
+    # txt = open("./downloads/" + filename + "_questions.txt", 'w', encoding='utf-8')
+    questions = {}
+    questions_number = 1
+    cur_page = 0 # 현재 페이지
+    """ ChatGPT Setting """
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    openai.api_key = OPEN_AI_API_KEY
+    model = "gpt-3.5-turbo"
+    messages = [ # system content 손 볼 필요 있음
+            {"role": "system", "content": "사용자가 전송하는 내용을 토대로 문제를 정확히 1개만 출제해. { 문제 : 질문, 1 : 첫 번째 선택지, 2 : 두 번째 선택지, 3: 세 번째 선택지, 4: 네 번째 선택지, 정답: 정답번호, 해설: 해설 } 이러한 json형태로 출력해."}
+    ]
     
-@app.route('/questions')
-def questions(result):
-    print("==============",result)
-    questions =pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
-    return render_template('questions.html')
+    """ JSON Setting """
+    json_file_path = "./downloads/questions.json"
+    json_data = {}
+    json_data['questions'] = []
 
-@app.route('/landing')
-def landing():
-    return render_template('landing.html')
+    for page in pages: # 페이지별 문제 추출
+        cur_page += 1 # 현재 페이지 수
+        if cur_page < int(start_page) or cur_page > int(end_page): # start_page ~ end_page 까지만 작동
+            continue
+        
+        query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장
+        print(f"-- {cur_page} 페이지 문제 추출 중 --")
+        messages.append({"role": "user", "content": query})
+        
+        for i in range(int(num_of_questions_per_page)):
+            # ChatGPT API 호출하기
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=messages
+            )
+            answer = response['choices'][0]['message']['content']
+            print('answer: ',answer)
+            questions[questions_number] = answer
+            questions_number += 1
 
-    
-if __name__ == '__main__':
-    app.run(debug=True) # 배포시 debug=True 삭제
-    # app.run(host='0.0.0.0') 배포 시 사용
-    
+        # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
+        messages.pop()
+    # txt.close()
+    return 

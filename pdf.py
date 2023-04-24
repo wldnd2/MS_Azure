@@ -4,20 +4,20 @@ from flask import Blueprint, send_file, request, redirect, url_for, render_templ
 from PyPDF2 import PdfReader
 import openai, json
 
-def pdf_processing(filename:str, start_page, end_page, num_of_questions):    
+def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page):    
     """ PDF 추출 Setting """
     reader = PdfReader("./uploads/" + filename)
     pages = reader.pages 
-#    txt = open("./downloads/" + filename + "_questions.txt", 'w', encoding='utf-8')
+    # txt = open("./downloads/" + filename + "_questions.txt", 'w', encoding='utf-8')
     questions = {}
-    cnt = 0
-    cur = 0 # 현재 페이지
+    questions_number = 1
+    cur_page = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
-            {"role": "system", "content": "사용자가 전송하는 내용을 토대로 문제를 한 개만 만들어줘. { 문제 : 질문, 1 : 첫 번째 선택지, 2 : 두 번째 선택지, 3: 세 번째 선택지, 4: 네 번째 선택지, 정답: 정답번호, 해설: 해설 } 이러한 형태로 출력해줘. json 형식으로 답해줘."}
+            {"role": "system", "content": "사용자가 전송하는 내용을 토대로 문제를 정확히 1개만 출제해. { 문제 : 질문, 1 : 첫 번째 선택지, 2 : 두 번째 선택지, 3: 세 번째 선택지, 4: 네 번째 선택지, 정답: 정답번호, 해설: 해설 } 이러한 json형태로 출력해."}
     ]
     
     """ JSON Setting """
@@ -26,35 +26,26 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions):
     json_data['questions'] = []
 
     for page in pages: # 페이지별 문제 추출
-        cur += 1 # 현재 페이지 수
-        if cur < int(start_page) or cur > int(end_page): # start_page ~ end_page 까지만 작동
-            continue;
+        cur_page += 1 # 현재 페이지 수
+        if cur_page < int(start_page) or cur_page > int(end_page): # start_page ~ end_page 까지만 작동
+            continue
         
         query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장
-        print(f"-- {cur} 페이지 문제 추출 중 --")
+        print(f"-- {cur_page} 페이지 문제 추출 중 --")
         messages.append({"role": "user", "content": query})
         
-        # ChatGPT API 호출하기
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=messages
-        )
-        answer = response['choices'][0]['message']['content']
-        
-        # Json 데이터에 현재 페이지에서 생성된 question 추가
-        """ !!Json 형식으로 GPT 답변이 온다고 가정하고 코드 작성!! """
-#        add_code = "json_data['questions'].append(" + answer + ")"
-#        exec(add_code)
-        print(answer)
-        cnt += 1
-        questions[cnt] = answer
-        
+        for i in range(int(num_of_questions_per_page)):
+            # ChatGPT API 호출하기
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=messages
+            )
+            answer = response['choices'][0]['message']['content']
+            print('answer: ',answer)
+            questions[questions_number] = answer
+            questions_number += 1
+
         # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
         messages.pop()
-        
-    # Json 파일에 쓰기
-#    with open(json_file_path, 'w', encoding='utf-8') as outfile:
-#        json.dump(json_data, outfile, indent='\t', ensure_ascii=False)
     # txt.close()
-
     return questions
