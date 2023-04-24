@@ -40,6 +40,23 @@
 </head>
 <body>
     <h1>문제 확인 페이지</h1>
-    <h2>Hello world!!</h2>
+    {% for key, value in check_result.items() %}
+    <table>
+        {% for inner_key, inner_value in value.items() %}
+            {% if inner_key == '문제' %}
+            <tr>
+                <th>{{ key }}번 {{ inner_key }}</th>
+                <td>{{ inner_value }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <th>{{ inner_key }}</th>
+                <td>{{ inner_value }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+{% endfor %}
+
 </body>
 </html>
