@@ -48,4 +48,4 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page
         # 다음 페이지를 위해 messages에서 현재 페이지의 text로 작성된 user content 삭제
         messages.pop()
     # txt.close()
-    return questions
+    return 
