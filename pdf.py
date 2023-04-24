@@ -13,7 +13,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page
     questions_number = 1
     cur_page = 0 # 현재 페이지
     """ ChatGPT Setting """
-    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
+    OPEN_AI_API_KEY = "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" # 각자 키 입력 (https://platform.openai.com/account/api-keys 확인 ㄱ)
     openai.api_key = OPEN_AI_API_KEY
     model = "gpt-3.5-turbo"
     messages = [ # system content 손 볼 필요 있음
@@ -30,7 +30,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page
         if cur_page < int(start_page) or cur_page > int(end_page): # start_page ~ end_page 까지만 작동
             continue
         
-        query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장
+        query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장 
         print(f"-- {cur_page} 페이지 문제 추출 중 --")
         messages.append({"role": "user", "content": query})
         
