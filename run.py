@@ -10,6 +10,7 @@ import os
 import json
 import openai
 import secrets
+import numpy as np
 from PyPDF2 import PdfReader
 from pdf import pdf_processing
 from werkzeug.utils import secure_filename
@@ -25,7 +26,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024 # 16MB로 업로드 크기 제한, RequestEntityTooLarge : 크기 초과시 이 예외 발생, 처리 필요
 
 GPT_answer = []
-User_anwer = []
+User_answer = []
+false_answer = 0
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -33,6 +35,9 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+    GPT_answer.clear()
+    User_answer.clear()
+    false_answer = 0
     if request.method == 'POST':
         result = request.form # start_page, end_page, num_of_questions 변수 저장
         file = request.files['myfile']
@@ -46,9 +51,10 @@ def upload_file():
 
 @app.route('/questions', methods=['GET', 'POST'])
 def questions():
+    
     if request.method == 'POST':
         for key, value in request.form.items():
-            User_anwer.append(int(value))
+            User_answer.append(int(value))
         return redirect(url_for('check'))
     else:
         filename = session.get('filename')
@@ -88,10 +94,15 @@ def questions():
 def check():
     print("********** CHECK ***********")
     print(GPT_answer)
-    print(User_anwer)
+    print(User_answer)
+    false_answer = np.equal(GPT_answer,User_answer)
+    false_ans_num = len(false_answer) - sum(false_answer)
+    print(false_answer)
+    print(false_ans_num)
+
     GPT_response = json.loads(session.get('GPT_QUESTIONS', '{}'))
     print(GPT_response)
-    return render_template('check.html', check_result=GPT_response)
+    return render_template('check.html', check_result=GPT_response, false_num=false_ans_num, false_answer=false_answer)
 
 if __name__ == '__main__':
     app.run(debug=True) # 배포시 debug=True 삭제
