@@ -8,9 +8,16 @@
    <title>Document</title>
    <style>
       body {
-         background-color: #f2f2f2;
+         background-image: url('../static/css/back.png');
+         background-color: black;
+         background-repeat : no-repeat;
+         background-size : contain;
+         width: 100%;
+         margin: 0 0 0 0;
          font-family: Arial, sans-serif;
          font-size: 16px;
+         display: flex;
+         justify-content: center;
       }
       
       h1 {
@@ -20,8 +27,9 @@
       }
       
       div {
-         background-color: #fff;
+         background-color:rgba(255, 255, 255, 0.8);
          border: 1px solid #ccc;
+         border-radius: 20px;
          padding: 20px;
          margin: 20px;
       }
@@ -47,31 +55,74 @@
          margin: 10px 20px;
          padding: 15px;
       }
+
+      .wrap {
+         margin-top: 20%;
+         width: 70%;
+      }
+
+      #input_button {
+         background-color: white;
+         width: 80%;
+         height: 70px;
+         border: 0px;
+         border-radius: 70px;
+         margin-top: 20px;
+         box-shadow: 1px 0px 30px 8px rgba(255,255,255,0.46);
+         font-size: 20px;
+      }
+      
+      .wrap_button 
+      {
+         display: flex;
+         justify-content: center;
+      }
+
+      #input {
+         width: 250px;
+         height: 32px;
+         font-size: 12px;
+         border: 0;
+         border-radius: 50px;
+         outline: none;
+         padding-left: 20px;
+         background-color: rgb(143, 149, 216);
+         font-size: large;
+         color: white;
+      }
+
+      #input::placeholder {
+         color: white;
+         margin-left: 10px;
+      }
    </style>
 </head>
 <body>
-   <h1>문제 출제 페이지</h1>
-   <form action="http://127.0.0.1:5000/questions" method="post" enctype="multipart/form-data">
-      <div>
-         {% for key, value in result.items() %}
-            <div>
-               {% for inner_key, inner_value in value.items() %}
-                  {% if inner_key == '해설' or inner_key == '정답'%}
-                     {% break %}
-                  {% endif %}
-                  {% if inner_key == '문제' %}
-                     <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
-                  {% else %}
-                     <div>{{ inner_key }}. {{ inner_value }}</div>
-                  {% endif %}
-               {% endfor %}
-               <input id="input" type = "text" name = {{key}} placeholder="정답 번호를 입력해주세요"/>
-            </div>
-         {% endfor %}
-      </div>
-      <div>
-         <button id="input_button" type="submit" value="정답 제출하기">정답 제출하기</button>
-      </div>
-   </form>
+   <div class="wrap">
+      
+      <form action="http://127.0.0.1:5000/questions" method="post" enctype="multipart/form-data">
+         <div>
+            {% for key, value in result.items() %}
+               <div>
+                  {% for inner_key, inner_value in value.items() %}
+                     {% if inner_key == '해설' or inner_key == '정답'%}
+                        {% break %}
+                     {% endif %}
+                     {% if inner_key == '문제' %}
+                        <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
+                     {% else %}
+                        <div>{{ inner_key }}. {{ inner_value }}</div>
+                     {% endif %}
+                  {% endfor %}
+                  <input id="input" type = "text" name = {{key}} placeholder="정답 번호를 입력해주세요"/>
+               </div>
+            {% endfor %}
+         </div>
+         <contain class="wrap_button">
+            <button id="input_button" type="submit" value="정답 제출하기">✅ 정답 제출하기</button>
+         </contain>
+      </form>
+   </div>
+   
 </body>
 </html>
