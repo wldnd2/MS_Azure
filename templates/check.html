@@ -16,6 +16,9 @@
             color: #333;
             text-align: center;
         }
+        h3{
+            text-align: center;
+        }
         
         table {
             margin: 20px auto;
@@ -36,11 +39,34 @@
             text-align: center;
             background-color: #c3dcf1;
         }    
+        .false_table{
+            /* border: 1px solid red;
+            border-color: red; */
+            background: #ef7676;
+        }
     </style>
 </head>
 <body>
     <h1>문제 확인 페이지</h1>
+    <h3>틀린 문제: {{ false_num }}개</h3>
     {% for key, value in check_result.items() %}
+    {% if false_answer[key|int - 1]==False %}
+    <table>
+        {% for inner_key, inner_value in value.items() %}
+            {% if inner_key == '문제' %}
+            <tr>
+                <th class="false_table">{{ key }}번 {{ inner_key }}</th>
+                <td>{{ inner_value }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <th>{{ inner_key }}</th>
+                <td>{{ inner_value }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% else %}
     <table>
         {% for inner_key, inner_value in value.items() %}
             {% if inner_key == '문제' %}
@@ -56,6 +82,7 @@
             {% endif %}
         {% endfor %}
     </table>
+    {% endif %}
 {% endfor %}
 
 </body>
