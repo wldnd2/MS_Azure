@@ -77,6 +77,30 @@
             background: #ef7676;
         }
 
+        #button
+        {
+            background-color: #ffffff;
+            height: 50px;
+            position: sticky;
+        }
+
+        button
+        {
+            height: 50px;
+            width: 200px;
+            border: 0px;
+            border-radius: 70px;
+            background-color: black;
+            color: white;
+            box-shadow: 1px 0px 30px 8px rgba(255,255,255,0.46);
+            font-weight: bold;
+            position: sticky;
+        }
+
+        form
+        {
+            position: sticky;
+        }
     </style>
 </head>
 <body>
@@ -112,10 +136,13 @@
                         {% endfor %}
                 </div>
             </div>
+            <div id="button">
+                <form method="POST">
+                    <button type="submit">문제 및 정답 다운로드</button>
+                </form>
+            </div>
         </div>
-        <form method="POST">
-            <button type="submit">문제 및 정답 다운로드</button>
-        </form>
+        
     </div>
 </body>
 </html>
