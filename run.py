@@ -116,5 +116,5 @@ def check():
         return render_template('check.html', check_result=GPT_response, false_num=false_ans_num, false_answer=false_answer)
 
 if __name__ == '__main__':
-    app.run(debug=True) # 배포시 debug=True 삭제
+    app.run() # 배포시 debug=True 삭제
     # app.run(host='0.0.0.0') 배포 시 사용
