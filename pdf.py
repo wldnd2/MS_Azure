@@ -30,7 +30,7 @@ def pdf_processing(filename:str, start_page, end_page, num_of_questions_per_page
         if cur_page < int(start_page) or cur_page > int(end_page): # start_page ~ end_page 까지만 작동
             continue
         
-        query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장
+        query = page.extract_text() # 각 페이지에서 text 추출하여 query에 저장 
         print(f"-- {cur_page} 페이지 문제 추출 중 --")
         messages.append({"role": "user", "content": query})
         
