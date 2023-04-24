@@ -96,7 +96,7 @@ form div input::file-selector-button {
     float : left;
     height: 34px;
     margin-top: 8px;
-    width: 120px;
+    width: 140px;
 }
 
 .first_input
@@ -106,7 +106,7 @@ form div input::file-selector-button {
 
 .input_button_wrap
 {
-    width: 386px;
+    width: 406px;
     display: flex;
     justify-content: center;
 }
@@ -114,7 +114,7 @@ form div input::file-selector-button {
 #input_button
 {
     background-color: white;
-    width: 386px;
+    width: 406px;
     height: 40px;
     border: 0px;
     border-radius: 70px;
