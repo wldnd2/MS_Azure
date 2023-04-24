@@ -119,7 +119,11 @@
                                     {% if inner_key == '문제' %}
                                         <div class="false_table"><h3>{{ key }}번 {{ inner_value }}</h3></div>
                                     {% else %}
+                                        {% if User_answer[key|int - 1]==inner_key|int %}
+                                        <div class="false_table">{{ inner_key }}. {{ inner_value }}</div>
+                                        {% else %}
                                         <div>{{ inner_key }}. {{ inner_value }}</div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>

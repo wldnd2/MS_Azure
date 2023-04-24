@@ -113,7 +113,7 @@ def check():
         print(false_answer)
         print(false_ans_num)
         GPT_response = json.loads(session.get('GPT_QUESTIONS', '{}'))
-        return render_template('check.html', check_result=GPT_response, false_num=false_ans_num, false_answer=false_answer)
+        return render_template('check.html', check_result=GPT_response, false_num=false_ans_num, false_answer=false_answer, User_answer=User_answer)
 
 if __name__ == '__main__':
     app.run(debug=True) # 배포시 debug=True 삭제
