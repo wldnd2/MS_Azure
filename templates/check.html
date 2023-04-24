@@ -81,46 +81,30 @@
 <body>
     <div class="wrap-whole">
         <h1>🔥 정답 확인</h1>
-
         <h3>틀린 문제: {{ false_num }}개</h3>
         <div class="content">
             <div class="hey">
                 {% for key, value in check_result.items() %}
                 {% if false_answer[key|int - 1]==False %}
-                
-                    <table>
-                    {% for inner_key, inner_value in value.items() %}
-                        {% if inner_key == '문제' %}
-                        <tr>
-                            <th class="false_table">{{ key }}번 {{ inner_key }}</th>
-                            <td>{{ inner_value }}</td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <th>{{ inner_key }}</th>
-                            <td>{{ inner_value }}</td>
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </table>
-                
-                
+                    <div>
+                        {% for inner_key, inner_value in value.items() %}
+                            {% if inner_key == '문제' %}
+                                <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
+                            {% else %}
+                                <div>{{ inner_key }}. {{ inner_value }}</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 {% else %}
-                <table>
-                    {% for inner_key, inner_value in value.items() %}
-                        {% if inner_key == '문제' %}
-                        <tr>
-                            <th>{{ key }}번 {{ inner_key }}</th>
-                            <td>{{ inner_value }}</td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <th>{{ inner_key }}</th>
-                            <td>{{ inner_value }}</td>
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                </table>
+                    <div>
+                        {% for inner_key, inner_value in value.items() %}
+                            {% if inner_key == '문제' %}
+                                <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
+                            {% else %}
+                                <div>{{ inner_key }}. {{ inner_value }}</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 {% endif %}
                 {% endfor %}
             </div>
