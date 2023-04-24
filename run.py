@@ -64,7 +64,7 @@ def questions():
         filename = session.get('filename')
         result = session.get('result')
         result["filename"] = filename
-        question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
+        question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"], result["api"])
         Qna_result = {}
         Qna_number = 1
         # print("***********{ PDF RESULT }***********")
