@@ -8,16 +8,37 @@
     <title>Document</title>
     <style>
         body {
-            background-color: #f2f2f2;
+            background-image: url('../static/css/back.png');
+            background-color: black;
+            background-repeat : no-repeat;
+            background-size : cover;
+            width: 100%;
+            margin: 0 0 0 0;
             font-family: Arial, sans-serif;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
         }
         
         h1 {
             color: #333;
             text-align: center;
         }
+
+        .wrap-whole {
+            width: 80%;
+            background-color:rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px;
+            margin-top: 20%;
+            box-shadow: 1px 0px 30px 8px rgba(255,255,255,0.3);
+        }
+        
         h3{
             text-align: center;
+            margin-bottom: 30px;
         }
         
         table {
@@ -44,46 +65,66 @@
             border-color: red; */
             background: #ef7676;
         }
+
+        .content
+        {
+            width: 90%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hey {
+            margin-left: 10%;
+        }
     </style>
 </head>
 <body>
-    <h1>문제 확인 페이지</h1>
-    <h3>틀린 문제: {{ false_num }}개</h3>
-    {% for key, value in check_result.items() %}
-    {% if false_answer[key|int - 1]==False %}
-    <table>
-        {% for inner_key, inner_value in value.items() %}
-            {% if inner_key == '문제' %}
-            <tr>
-                <th class="false_table">{{ key }}번 {{ inner_key }}</th>
-                <td>{{ inner_value }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <th>{{ inner_key }}</th>
-                <td>{{ inner_value }}</td>
-            </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-    {% else %}
-    <table>
-        {% for inner_key, inner_value in value.items() %}
-            {% if inner_key == '문제' %}
-            <tr>
-                <th>{{ key }}번 {{ inner_key }}</th>
-                <td>{{ inner_value }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <th>{{ inner_key }}</th>
-                <td>{{ inner_value }}</td>
-            </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-    {% endif %}
-{% endfor %}
+    <div class="wrap-whole">
+        <h1>🔥 정답 확인</h1>
 
+        <h3>틀린 문제: {{ false_num }}개</h3>
+        <div class="content">
+            <div class="hey">
+                {% for key, value in check_result.items() %}
+                {% if false_answer[key|int - 1]==False %}
+                
+                    <table>
+                    {% for inner_key, inner_value in value.items() %}
+                        {% if inner_key == '문제' %}
+                        <tr>
+                            <th class="false_table">{{ key }}번 {{ inner_key }}</th>
+                            <td>{{ inner_value }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th>{{ inner_key }}</th>
+                            <td>{{ inner_value }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </table>
+                
+                
+                {% else %}
+                <table>
+                    {% for inner_key, inner_value in value.items() %}
+                        {% if inner_key == '문제' %}
+                        <tr>
+                            <th>{{ key }}번 {{ inner_key }}</th>
+                            <td>{{ inner_value }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th>{{ inner_key }}</th>
+                            <td>{{ inner_value }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </body>
 </html>
