@@ -13,6 +13,7 @@ import secrets
 import numpy as np
 from PyPDF2 import PdfReader
 from pdf import pdf_processing
+from generate_txt import generate_txt_file
 from werkzeug.utils import secure_filename
 from flask import Blueprint, send_file, request, redirect, url_for, render_template, Flask, session
 
@@ -51,7 +52,6 @@ def upload_file():
 
 @app.route('/questions', methods=['GET', 'POST'])
 def questions():
-    
     if request.method == 'POST':
         for key, value in request.form.items():
             User_answer.append(int(value))
@@ -92,17 +92,24 @@ def questions():
 
 @app.route('/check', methods=['GET', 'POST'])
 def check():
-    print("********** CHECK ***********")
-    print(GPT_answer)
-    print(User_answer)
-    false_answer = np.equal(GPT_answer,User_answer)
-    false_ans_num = len(false_answer) - sum(false_answer)
-    print(false_answer)
-    print(false_ans_num)
-
-    GPT_response = json.loads(session.get('GPT_QUESTIONS', '{}'))
-    print(GPT_response)
-    return render_template('check.html', check_result=GPT_response, false_num=false_ans_num, false_answer=false_answer)
+    if request.method == 'POST':
+        GPT_response = json.loads(session.get('GPT_QUESTIONS', '{}'))
+        print(GPT_response)
+        generate_txt_file(GPT_response)
+        # 다운로드할 파일 경로 설정
+        filepath = os.path.join(os.getcwd(), 'GPT_questions.txt')
+        # 파일 다운로드 함수 호출
+        return send_file(filepath, as_attachment=True)
+    else:
+        print("********** CHECK ***********")
+        print(GPT_answer)
+        print(User_answer)
+        false_answer = np.equal(GPT_answer,User_answer)
+        false_ans_num = len(false_answer) - sum(false_answer)
+        print(false_answer)
+        print(false_ans_num)
+        GPT_response = json.loads(session.get('GPT_QUESTIONS', '{}'))
+        return render_template('check.html', check_result=GPT_response, false_num=false_ans_num, false_answer=false_answer)
 
 if __name__ == '__main__':
     app.run(debug=True) # 배포시 debug=True 삭제
