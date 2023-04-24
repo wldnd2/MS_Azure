@@ -74,7 +74,7 @@
         .false_table{
             /* border: 1px solid red;
             border-color: red; */
-            background: #ef7676;
+            background: #e78e8e;
         }
 
         #button
@@ -109,6 +109,7 @@
             <div class="wrap-whole">
                 <div>
                     <h1>🔥 문제 답 확인하기</h1>
+                    <h3>틀린 개수: {{ false_num }}개</h3>
                 </div>
                 <div>
                         {% for key, value in check_result.items() %}
@@ -116,7 +117,7 @@
                             <div>
                                 {% for inner_key, inner_value in value.items() %}
                                     {% if inner_key == '문제' %}
-                                        <div><h3>{{ key }}번 {{ inner_value }}</h3></div>
+                                        <div class="false_table"><h3>{{ key }}번 {{ inner_value }}</h3></div>
                                     {% else %}
                                         <div>{{ inner_key }}. {{ inner_value }}</div>
                                     {% endif %}

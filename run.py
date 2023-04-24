@@ -28,6 +28,7 @@ app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024 # 16MB로 업로드 크기 �
 
 GPT_answer = []
 User_answer = []
+global false_answer
 false_answer = 0
 
 def allowed_file(filename):
@@ -36,6 +37,7 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+    global false_answer
     GPT_answer.clear()
     User_answer.clear()
     false_answer = 0
@@ -57,6 +59,8 @@ def questions():
             User_answer.append(int(value))
         return redirect(url_for('check'))
     else:
+        GPT_answer.clear()
+        User_answer.clear()
         filename = session.get('filename')
         result = session.get('result')
         result["filename"] = filename
