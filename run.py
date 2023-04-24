@@ -17,6 +17,7 @@ from flask import Blueprint, send_file, request, redirect, url_for, render_templ
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 UPLOAD_FOLDER = os.getcwd() + '/uploads'  # 절대 파일 경로
 ALLOWED_EXTENSIONS = set(['pdf'])
@@ -42,42 +43,37 @@ def upload_file():
 
 @app.route('/questions')
 def questions():
-    
     filename = session.get('filename')
     result = session.get('result')
     # if request.method == 'POST':
         # res = request.form # filename, start_page, end_page, num_of_questions 변수 저장
     result["filename"] = filename
-
-
-    question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
-    Qna_result = {}
-    Qna_number = 1
-    # print("***********{ PDF RESULT }***********")
-    # print(question)
-    print("\n***********{ Questions PROCESSING }*************")
-    for key, value in question.items():
-        try:
-            if(value[0] == "[" and value[-1] == "]"):
-                print("***********{ List processing }***********")
-                value = json.loads(value)
-                for item in value:
-                    Qna_result[Qna_number] = item
-                    Qna_number += 1
-            else:
-                print("***********{ Json processing }***********")
-                Qna_result[Qna_number] = json.loads(value)
-                Qna_number += 1
-        except:
-            print("***********{ PASS!!!! }*************")
-            continue
-    print("\n***********{ FINAL RESULT }*************")
-    for key, value in Qna_result.items():
-        print(key, value)
-        print()
-    print("*******************************************")
+    # question = pdf_processing(result["filename"], result["start_page"], result["end_page"], result["num_of_questions"])
+    # Qna_result = {}
+    # Qna_number = 1
+    # # print("***********{ PDF RESULT }***********")
+    # # print(question)
+    # print("\n***********{ Questions PROCESSING }*************")
+    # for key, value in question.items():
+    #     try:
+    #         if(value[0] == "[" and value[-1] == "]"):
+    #             print("***********{ List processing }***********")
+    #             value = json.loads(value)
+    #             for item in value:
+    #                 Qna_result[Qna_number] = item
+    #                 Qna_number += 1
+    #         else:
+    #             print("***********{ Json processing }***********")
+    #             Qna_result[Qna_number] = json.loads(value)
+    #             Qna_number += 1
+    #     except:
+    #         print("***********{ PASS!!!! }*************")
+    #         continue
+    # print("\n***********{ FINAL RESULT }*************")
+    # print(Qna_result)
+    # print("*******************************************")
+    Qna_result = {1: {'문제': '지식 재산권과 관련된 내용 중 특허권에 대한 설명은?', '1': '자연법칙을 이용한 기술적 사상의 창작으로서 발명수준이 고도한 발명에 대하여 부여되는 권리', '2': '물품의 형상, 구조, 조합에 관한 고안에 대해여 부여되는 권리', '3': '물품의 외관인 디자인에 대한 아이디어를 보호하는 권리', '4': '식별력있는 상표또는 서비스표에 부여되는 권리', '정답': 1, '해설': '특허권은 자연법칙을 이용한 기술적 사상의 창작으로서 발명수준이 고도한 발명에 대하여 부여되는 권리입니다.'}}
     return render_template('questions.html', result=Qna_result)
-
 
 if __name__ == '__main__':
     app.run(debug=True) # 배포시 debug=True 삭제
